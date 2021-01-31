@@ -3,6 +3,13 @@ export default interface Post {
   data: Data;
 }
 
+export interface PartialPost {
+  id: string;
+  created_utc: number;
+  title: string;
+  ups: number;
+}
+
 export interface Data {
   approved_at_utc: null;
   subreddit: string;
