@@ -1,3 +1,6 @@
+###
 GET http://127.0.0.1:5001/wsb-sentiment-tracker/us-central1/getStonks HTTP/1.1
 ###
 GET http://127.0.0.1:5001/wsb-sentiment-tracker/us-central1/getTickers HTTP/1.1
+###
+GET http://127.0.0.1:5001/wsb-sentiment-tracker/us-central1/addToBlacklist HTTP/1.1

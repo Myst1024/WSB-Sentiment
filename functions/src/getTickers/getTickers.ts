@@ -36,10 +36,11 @@ const parseAlphavantageResult = (result: AxiosResponse) => {
       tickers.push(ticker);
     }
   }
-  console.log(tickers);
+  console.log("found " + tickers.length + " tickers");
   return tickers;
 };
 
+//TODO: Store this as array in firebase storage instead
 const submitTickers = async (tickers: Array<string>) => {
   const timestamp = firebase.firestore.Timestamp.now()._seconds;
 

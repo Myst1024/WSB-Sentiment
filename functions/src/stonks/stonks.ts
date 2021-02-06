@@ -11,13 +11,27 @@ try {
 } catch (e) {}
 const db = admin.firestore();
 
+exports.scheduledStonks = functions.pubsub
+  .schedule("0 0,12 * * *") // run every noon and midnight
+  .timeZone("America/Chicago")
+  .onRun(async (context) => {
+    const posts: Array<PartialPost> = await getNewPosts();
+    const blacklist: Array<string> = await getBlacklist();
+    const tickers: Array<string> = await getTickers();
+
+    const stonks = parsePosts(posts, blacklist, tickers);
+    console.log(stonks);
+    await submitStonks(stonks);
+
+    return null;
+  });
+
 exports.getStonks = functions.https.onRequest(async (request, response) => {
   const posts: Array<PartialPost> = await getNewPosts();
   const blacklist: Array<string> = await getBlacklist();
   const tickers: Array<string> = await getTickers();
 
   const stonks = parsePosts(posts, blacklist, tickers);
-  console.log(stonks);
   await submitStonks(stonks);
 
   response.send("done");
@@ -68,7 +82,7 @@ const parsePosts = (
 ) => {
   const stonks = new Map();
   posts.forEach((post) => {
-    const upvotes = Math.sqrt(post.ups);
+    const upvotes = post.ups;
     //TODO: additionally calculate sentiment from title
     const words = post.title ? post.title.split(/\W/) : [];
     const uniqueWords = [...new Set(words)]; // stripping duplicates
